@@ -509,7 +509,7 @@ function OfferPage() {
     subjects.includes("animal") && animalCount > 0
       ? { key: "animal", label: `${animalCount} ${animalCount === 1 ? "zwierzę" : "zwierzęta"}`, onRemove: () => { setAnimalCount(0); setSubjects((current) => current.filter((id) => id !== "animal")); } }
       : null,
-    subjects.includes("custom") ? { key: "custom", label: customCommitted && customText.trim() ? customText.trim() : "Własny element", onRemove: () => { setCustomCommitted(false); setCustomText(""); setSubjects((current) => current.filter((id) => id !== "custom")); } } : null,
+    subjects.includes("custom") ? { key: "custom", label: customCommitted && customText.trim() ? customText.trim() : "Własny element", onRemove: () => { setCustomCommitted(false); setSubjects((current) => current.filter((id) => id !== "custom")); } } : null,
   ].filter(Boolean) as { key: string; label: string; onRemove?: () => void }[];
 
   // Only the deepest completed step can be cleared, so the step sequence stays intact.
@@ -651,10 +651,11 @@ function OfferPage() {
                         return [...current, "animal"];
                       }
                       if (item.id === "custom") {
-                        // Clicking the card when the element is already confirmed deselects it right away;
-                        // editing stays available through the chip button inside the card.
-                        if (customCommitted) { setCustomText(""); setCustomCommitted(false); return current.filter((id) => id !== "custom"); }
+                        // Removing the card keeps the committed text, so re-adding it restores
+                        // what was already confirmed instead of an empty field.
+                        if (customCommitted) { setCustomCommitted(false); return current.filter((id) => id !== "custom"); }
                         if (current.includes("custom")) { setCustomText(""); return current.filter((id) => id !== "custom"); }
+                        if (customText.trim()) setCustomCommitted(true);
                         return [...current, "custom"];
                       }
                       return current.includes(item.id) ? current.filter((id) => id !== item.id) : [...current, item.id];
