@@ -456,6 +456,8 @@ function OfferPage() {
   const [animalCount, setAnimalCount] = useState(0);
   const [customText, setCustomText] = useState("");
   const [customCommitted, setCustomCommitted] = useState(false);
+  const [graverText, setGraverText] = useState("");
+  const [graverCommitted, setGraverCommitted] = useState(false);
   const [size, setSize] = useState<string | null>(null);
   const [finish, setFinish] = useState<string | null>(null);
   const [base, setBase] = useState<string | null>(null);
@@ -512,7 +514,7 @@ function OfferPage() {
   // Clearing a step also resets all later choices so the configuration stays consistent.
   const clearSize = () => { setSize(null); setFinish(null); setBase(null); setPack(null); };
   const clearFinish = () => { setFinish(null); setBase(null); setPack(null); };
-  const clearBase = () => { setBase(null); setPack(null); };
+  const clearBase = () => { setBase(null); setPack(null); setGraverText(""); setGraverCommitted(false); };
   const clearPack = () => { setPack(null); };
 
   const hasSelection = Boolean(size || finish || base || pack) || personCount > 1 || animalCount > 0 || subjects.includes("custom") || photoCount > 0;
@@ -526,6 +528,8 @@ function OfferPage() {
     setFinish(null);
     setBase(null);
     setPack(null);
+    setGraverText("");
+    setGraverCommitted(false);
     setPhotoCount(0);
     setColor("white");
     setColorText("");
