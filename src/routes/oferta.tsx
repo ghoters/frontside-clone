@@ -821,10 +821,10 @@ function OfferPage() {
                         value={graverText}
                         onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); }}
                         onKeyDown={(e) => {
-                          if (e.key === "Enter" && graverText.trim()) setGraverCommitted(true);
-                          else if (e.key === "Escape") { setGraverText(""); setGraverCommitted(false); }
+                          if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverCommitted(true); }
+                          else if (e.key === "Escape") { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
                         }}
-                        onBlur={() => { if (!graverCommitted) setGraverText(""); }}
+                        onBlur={() => { if (!graverCommitted) scheduleGraverReset(); }}
                         placeholder="Wpisz grawer, np. Na urodziny"
                         className="h-9 min-w-0 flex-1 rounded-md border border-input bg-card px-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       />
