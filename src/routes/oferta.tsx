@@ -83,9 +83,9 @@ const bases: { id: string; title: string; text: string; price: number; imageSide
   { id: "none", title: "Bez podstawki", text: "Bez dodatkowych kosztów", price: 0, imageSide: "left", image: bezPodstawkiAsset.url, imageFull: true, textNowrap: true },
 ];
 
-const packages: { id: string; title: string; text: string; price: number; imageSide: ImageSide; recommended?: boolean }[] = [
-  { id: "standard", title: "Standardowe", text: "Wliczone w cenę", price: 0, imageSide: "left" },
-  { id: "gift", title: "Pudełko prezentowe", text: "Eleganckie opakowanie gotowe do wręczenia.", price: 25, imageSide: "left", recommended: true },
+const packages: { id: string; title: string; text: string; price: number; imageSide: ImageSide; recommended?: boolean; image?: string; imageFull?: boolean }[] = [
+  { id: "standard", title: "Standardowe", text: "Wliczone w cenę", price: 0, imageSide: "left", image: opakowanieStandardoweAsset.url, imageFull: true },
+  { id: "gift", title: "Pudełko prezentowe", text: "Eleganckie opakowanie gotowe do wręczenia.", price: 25, imageSide: "left", recommended: true, image: opakowaniePrezentoweAsset.url, imageFull: true },
 ];
 
 const navLinkHover = "transition-colors duration-200 hover:text-primary/70 focus-visible:text-primary/70 focus-visible:outline-none";
