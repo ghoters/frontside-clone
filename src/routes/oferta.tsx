@@ -77,9 +77,9 @@ const finishes: { id: string; title: string; text: string; price: number; imageS
   { id: "painted", title: "Figurka ręcznie malowana", text: "Ręczne malowanie detali.", price: 100, imageSide: "left", recommended: true, image: figurkaMalowanaAsset.url, imageFull: true },
 ];
 
-const bases: { id: string; title: string; text: string; price: number; imageSide: ImageSide; recommended?: boolean; image?: string; imageFull?: boolean }[] = [
+const bases: { id: string; title: string; text: string; price: number; imageSide: ImageSide; recommended?: boolean; image?: string; imageFull?: boolean; priceCentered?: boolean }[] = [
   { id: "standard", title: "Standardowa", text: "Wliczona w cenę", price: 0, imageSide: "left", recommended: true, image: podsatkaAsset.url, imageFull: true },
-  { id: "personalized", title: "Personalizowana", text: "Imię, data lub napis.", price: 40, imageSide: "left", image: podstawkaPersonalizowanaAsset.url, imageFull: true },
+  { id: "personalized", title: "Personalizowana", text: "Imię, data lub napis.", price: 40, imageSide: "left", image: podstawkaPersonalizowanaAsset.url, imageFull: true, priceCentered: true },
   { id: "none", title: "Bez podstawki", text: "Bez dodatkowych kosztów", price: 0, imageSide: "left", image: bezPodstawkiAsset.url, imageFull: true },
 ];
 
@@ -316,8 +316,8 @@ function ChoiceCard({ selected, stepActive, hoverable, locked, onClick, icon: Ic
   );
 }
 
-function CompactChoice({ selected, stepActive, hoverable, onClick, title, text, price, image, imageFull, imageSide, recommended, recommendedTone }: {
-  selected: boolean; stepActive: boolean; hoverable?: boolean; onClick: () => void; title: string; text: string; price: number; image?: string | undefined; imageFull?: boolean | undefined; imageSide: ImageSide; recommended?: boolean; recommendedTone?: "light-gray" | "dark-gray" | "purple" | undefined;
+function CompactChoice({ selected, stepActive, hoverable, onClick, title, text, price, priceCentered, image, imageFull, imageSide, recommended, recommendedTone }: {
+  selected: boolean; stepActive: boolean; hoverable?: boolean; onClick: () => void; title: string; text: string; price: number; priceCentered?: boolean; image?: string | undefined; imageFull?: boolean | undefined; imageSide: ImageSide; recommended?: boolean; recommendedTone?: "light-gray" | "dark-gray" | "purple" | undefined;
 }) {
   const recommendedClasses =
     recommendedTone === "light-gray" ? "bg-muted/60 text-muted-foreground/70" :
@@ -341,7 +341,7 @@ function CompactChoice({ selected, stepActive, hoverable, onClick, title, text, 
       <div className={`relative flex min-w-0 flex-1 flex-col justify-start pt-1.5 pr-4 ${fullBackground ? "pl-[14px]" : ""} ${recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "pb-1"}`}>
         <strong className="block text-xs">{title}</strong>
         <span className={`mt-auto block pt-1 text-[11px] ${price > 0 ? "text-muted-foreground" : "text-primary"}`}>{text}</span>
-        {price > 0 && <span className="mt-1 block text-[11px] font-bold text-primary">+ {price} zł</span>}
+        {price > 0 && <span className={`mt-1 block text-[11px] font-bold text-primary ${priceCentered ? "w-full text-center" : ""}`}>+ {price} zł</span>}
       </div>
       {imageSide === "right" && slot}
       <span className={`absolute right-3 top-3 size-4 rounded-full border ${selected ? "border-primary bg-primary ring-2 ring-card" : "border-border bg-card"}`} />
