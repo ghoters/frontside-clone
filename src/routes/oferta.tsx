@@ -456,6 +456,8 @@ function OfferPage() {
   const [animalCount, setAnimalCount] = useState(0);
   const [customText, setCustomText] = useState("");
   const [customCommitted, setCustomCommitted] = useState(false);
+  const [graverText, setGraverText] = useState("");
+  const [graverCommitted, setGraverCommitted] = useState(false);
   const [size, setSize] = useState<string | null>(null);
   const [finish, setFinish] = useState<string | null>(null);
   const [base, setBase] = useState<string | null>(null);
@@ -512,7 +514,7 @@ function OfferPage() {
   // Clearing a step also resets all later choices so the configuration stays consistent.
   const clearSize = () => { setSize(null); setFinish(null); setBase(null); setPack(null); };
   const clearFinish = () => { setFinish(null); setBase(null); setPack(null); };
-  const clearBase = () => { setBase(null); setPack(null); };
+  const clearBase = () => { setBase(null); setPack(null); setGraverText(""); setGraverCommitted(false); };
   const clearPack = () => { setPack(null); };
 
   const hasSelection = Boolean(size || finish || base || pack) || personCount > 1 || animalCount > 0 || subjects.includes("custom") || photoCount > 0;
@@ -526,6 +528,8 @@ function OfferPage() {
     setFinish(null);
     setBase(null);
     setPack(null);
+    setGraverText("");
+    setGraverCommitted(false);
     setPhotoCount(0);
     setColor("white");
     setColorText("");
@@ -794,6 +798,41 @@ function OfferPage() {
                   );
                 })}
               </div>
+              {base === "personalized" && (
+                <div className="mt-3.5 rounded-lg border border-border bg-card p-4">
+                  <h3 className="text-sm font-bold">Treść graweru</h3>
+                  <p className="mt-0.5 text-xs text-muted-foreground">Wpisz imię, datę lub napis, który umieścimy na podstawce.</p>
+                  {!graverCommitted ? (
+                    <div className="mt-3 flex gap-2">
+                      <input
+                        autoFocus
+                        value={graverText}
+                        onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" && graverText.trim()) setGraverCommitted(true);
+                          else if (e.key === "Escape") { setGraverText(""); setGraverCommitted(false); }
+                        }}
+                        onBlur={() => { if (!graverCommitted) setGraverText(""); }}
+                        placeholder="Wpisz grawer, np. Na urodziny"
+                        className="h-9 min-w-0 flex-1 rounded-md border border-input bg-card px-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      />
+                      <Button type="button" size="sm" disabled={!graverText.trim()} onMouseDown={(e) => e.preventDefault()} onClick={() => { if (graverText.trim()) setGraverCommitted(true); }}>
+                        Zatwierdź
+                      </Button>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => setGraverCommitted(false)}
+                      aria-label="Edytuj grawer"
+                      className="mt-3 flex h-9 w-full items-center justify-between gap-1.5 rounded-md border border-primary/40 bg-primary/5 px-3 text-xs font-semibold text-foreground transition-colors hover:bg-primary/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <span className="truncate text-left">{graverText}</span>
+                      <Check className="size-3.5 shrink-0 text-primary" />
+                    </button>
+                  )}
+                </div>
+              )}
             </section>
 
             <section className={`border-t border-border p-5 transition-all duration-300 ${readySteps[4] ? "bg-card" : "bg-muted/40 opacity-60 saturate-50 pointer-events-none select-none"}`}>
@@ -870,7 +909,7 @@ function OfferPage() {
               <SummaryRow icon={UsersRound} label="Liczba osób / zwierząt" items={subjectItems} removable={lastFilledStep === 0} price={subjectPrice > 0 ? subjectPrice : undefined} />
               <SummaryRow icon={Clock3} label="Rozmiar" value={selected.size?.title} price={selected.size?.price} removable={lastFilledStep === 1} onRemove={clearSize} />
               <SummaryRow icon={Palette} label="Wykończenie" value={finishLabel ?? selected.finish?.title} price={selected.finish?.price} removable={lastFilledStep === 2} onRemove={clearFinish} />
-              <SummaryRow icon={CircleCheck} label="Podstawka" value={selected.base?.title} price={selected.base?.price} removable={lastFilledStep === 3} onRemove={clearBase} />
+              <SummaryRow icon={CircleCheck} label="Podstawka" value={base === "personalized" && graverCommitted && graverText.trim() ? `Personalizowana — ${graverText.trim()}` : selected.base?.title} price={selected.base?.price} removable={lastFilledStep === 3} onRemove={clearBase} />
               <SummaryRow icon={Gift} label="Dodatki" value={selected.pack?.title} price={selected.pack?.price} removable={lastFilledStep === 4} onRemove={clearPack} />
               <div className="mt-1 flex items-end justify-between bg-secondary/70 px-4 py-4">
                 <div><strong className="text-sm">Łączna cena</strong><p className="mt-1 text-[10px] text-muted-foreground">Cena może ulec zmianie po weryfikacji zdjęć.</p></div>
