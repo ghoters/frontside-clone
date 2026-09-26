@@ -38,6 +38,8 @@ import rozmiar1Asset from "@/assets/rozmiar-1.jpg.asset.json";
 import figurkaMalowanaAsset from "@/assets/figurka-recznie-malowana-v3.jpg.asset.json";
 import figurkaJednokolorowaAsset from "@/assets/figurka-jednokolorowa.jpg.asset.json";
 import podsatkaAsset from "@/assets/podsatka.jpg.asset.json";
+import opakowanieStandardoweAsset from "@/assets/opakowanie-standardowe.jpg.asset.json";
+import opakowaniePrezentoweAsset from "@/assets/opakowanie-prezentowe.jpg.asset.json";
 import podstawkaPersonalizowanaAsset from "@/assets/podstawka-personalizowana.jpg.asset.json";
 import bezPodstawkiAsset from "@/assets/bez-podstawki.jpg.asset.json";
 
