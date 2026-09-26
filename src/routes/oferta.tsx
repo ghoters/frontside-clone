@@ -80,7 +80,7 @@ const finishes: { id: string; title: string; text: string; price: number; imageS
 const bases: { id: string; title: string; text: string; price: number; imageSide: ImageSide; recommended?: boolean; image?: string; imageFull?: boolean; priceCentered?: boolean }[] = [
   { id: "standard", title: "Standardowa", text: "Wliczona w cenę", price: 0, imageSide: "left", recommended: true, image: podsatkaAsset.url, imageFull: true },
   { id: "personalized", title: "Personalizowana", text: "Imię, data lub napis.", price: 40, imageSide: "left", image: podstawkaPersonalizowanaAsset.url, imageFull: true, priceCentered: true },
-  { id: "none", title: "Bez podstawki", text: "Bez dodatkowych kosztów", price: 0, imageSide: "left", image: bezPodstawkiAsset.url, imageFull: true },
+  { id: "none", title: "Bez podstawki", text: "Bez dodatkowych kosztów", price: 0, imageSide: "left", image: bezPodstawkiAsset.url, imageFull: true, textNowrap: true },
 ];
 
 const packages: { id: string; title: string; text: string; price: number; imageSide: ImageSide; recommended?: boolean }[] = [
