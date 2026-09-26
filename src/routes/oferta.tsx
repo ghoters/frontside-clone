@@ -535,6 +535,7 @@ function OfferPage() {
     setPack(null);
     setGraverText("");
     setGraverCommitted(false);
+    cancelGraverReset();
     setPhotoCount(0);
     setColor("white");
     setColorText("");
@@ -798,7 +799,13 @@ function OfferPage() {
                       hoverable={base !== item.id && isHoverStep(3)}
                       selected={base === item.id}
                       recommendedTone={item.id === "standard" ? baseRecommendedTone : undefined}
-                      onClick={() => base === item.id ? (lastFilledStep === 3 ? clearBase() : undefined) : setBase(item.id)}
+                      onClick={() => {
+                        if (base !== item.id) { cancelGraverReset(); setBase(item.id); return; }
+                        if (lastFilledStep !== 3) return;
+                        clearBase();
+                        // Re-clicking Personalizowana removes its selection and falls back to Standardowa.
+                        if (item.id === "personalized") setBase("standard");
+                      }}
                     />
                   );
                 })}
