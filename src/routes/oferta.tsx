@@ -338,9 +338,9 @@ function CompactChoice({ selected, stepActive, hoverable, onClick, title, text, 
       )}
       {recommended && <RecommendedBadge className={recommendedClasses} />}
       {imageSide === "left" && slot}
-      <div className={`relative flex min-w-0 flex-1 flex-col justify-start pt-1.5 ${textNowrap ? "pr-1" : "pr-4"} ${fullBackground ? "pl-[14px]" : ""} ${recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "pb-1"}`}>
+      <div className={`relative flex min-w-0 flex-1 flex-col justify-start pt-1.5 ${textNowrap ? "pr-1 pl-[6px]" : "pr-4"} ${fullBackground && !textNowrap ? "pl-[14px]" : ""} ${recommended && imageSide === "right" ? "pb-1 pt-[10px]" : "pb-1"}`}>
         <strong className="block text-xs">{title}</strong>
-        <span className={`mt-auto block pt-1 text-[11px] ${price > 0 ? "text-muted-foreground" : "text-primary"} ${textNowrap ? "-ml-2 whitespace-nowrap" : ""}`}>{text}</span>
+        <span className={`mt-auto block pt-1 text-[11px] ${price > 0 ? "text-muted-foreground" : "text-primary"} ${textNowrap ? "whitespace-nowrap" : ""}`}>{text}</span>
         {price > 0 && <span className={`mt-1 block text-[11px] font-bold text-primary ${priceCentered ? "w-full text-center" : ""}`}>+ {price} zł</span>}
       </div>
       {imageSide === "right" && slot}
