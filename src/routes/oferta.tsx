@@ -471,6 +471,11 @@ function OfferPage() {
   const colorResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cancelColorReset = () => { if (colorResetTimer.current) { clearTimeout(colorResetTimer.current); colorResetTimer.current = null; } };
   const scheduleColorReset = () => { cancelColorReset(); colorResetTimer.current = setTimeout(() => { colorResetTimer.current = null; setColorText(""); setColorCommitted(false); setColor("white"); }, 120); };
+  // Same delayed reset for the engraving text: blur with nothing committed falls back
+  // to the recommended base instead of leaving Personalizowana half-chosen.
+  const graverResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelGraverReset = () => { if (graverResetTimer.current) { clearTimeout(graverResetTimer.current); graverResetTimer.current = null; } };
+  const scheduleGraverReset = () => { cancelGraverReset(); graverResetTimer.current = setTimeout(() => { graverResetTimer.current = null; setGraverText(""); setGraverCommitted(false); setBase("standard"); }, 120); };
   const colorLabel = color === "white" ? "Biały" : color === "beige" ? "Beżowy" : colorCommitted && colorText.trim() ? `Inny: ${colorText.trim()}` : "Inny";
   const finishLabel = finish === "single" ? `Figurka jednokolorowa (${colorLabel})` : undefined;
 
@@ -514,7 +519,7 @@ function OfferPage() {
   // Clearing a step also resets all later choices so the configuration stays consistent.
   const clearSize = () => { setSize(null); setFinish(null); setBase(null); setPack(null); };
   const clearFinish = () => { setFinish(null); setBase(null); setPack(null); };
-  const clearBase = () => { setBase(null); setPack(null); setGraverText(""); setGraverCommitted(false); };
+  const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); setGraverText(""); setGraverCommitted(false); };
   const clearPack = () => { setPack(null); };
 
   const hasSelection = Boolean(size || finish || base || pack) || personCount > 1 || animalCount > 0 || subjects.includes("custom") || photoCount > 0;
