@@ -471,6 +471,11 @@ function OfferPage() {
   const colorResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cancelColorReset = () => { if (colorResetTimer.current) { clearTimeout(colorResetTimer.current); colorResetTimer.current = null; } };
   const scheduleColorReset = () => { cancelColorReset(); colorResetTimer.current = setTimeout(() => { colorResetTimer.current = null; setColorText(""); setColorCommitted(false); setColor("white"); }, 120); };
+  // Same delayed reset for the engraving text: blur with nothing committed falls back
+  // to the recommended base instead of leaving Personalizowana half-chosen.
+  const graverResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const cancelGraverReset = () => { if (graverResetTimer.current) { clearTimeout(graverResetTimer.current); graverResetTimer.current = null; } };
+  const scheduleGraverReset = () => { cancelGraverReset(); graverResetTimer.current = setTimeout(() => { graverResetTimer.current = null; setGraverText(""); setGraverCommitted(false); setBase("standard"); }, 120); };
   const colorLabel = color === "white" ? "Biały" : color === "beige" ? "Beżowy" : colorCommitted && colorText.trim() ? `Inny: ${colorText.trim()}` : "Inny";
   const finishLabel = finish === "single" ? `Figurka jednokolorowa (${colorLabel})` : undefined;
 
@@ -514,7 +519,7 @@ function OfferPage() {
   // Clearing a step also resets all later choices so the configuration stays consistent.
   const clearSize = () => { setSize(null); setFinish(null); setBase(null); setPack(null); };
   const clearFinish = () => { setFinish(null); setBase(null); setPack(null); };
-  const clearBase = () => { setBase(null); setPack(null); setGraverText(""); setGraverCommitted(false); };
+  const clearBase = () => { cancelGraverReset(); setBase(null); setPack(null); setGraverText(""); setGraverCommitted(false); };
   const clearPack = () => { setPack(null); };
 
   const hasSelection = Boolean(size || finish || base || pack) || personCount > 1 || animalCount > 0 || subjects.includes("custom") || photoCount > 0;
@@ -530,6 +535,7 @@ function OfferPage() {
     setPack(null);
     setGraverText("");
     setGraverCommitted(false);
+    cancelGraverReset();
     setPhotoCount(0);
     setColor("white");
     setColorText("");
@@ -793,7 +799,13 @@ function OfferPage() {
                       hoverable={base !== item.id && isHoverStep(3)}
                       selected={base === item.id}
                       recommendedTone={item.id === "standard" ? baseRecommendedTone : undefined}
-                      onClick={() => base === item.id ? (lastFilledStep === 3 ? clearBase() : undefined) : setBase(item.id)}
+                      onClick={() => {
+                        if (base !== item.id) { cancelGraverReset(); setBase(item.id); return; }
+                        if (lastFilledStep !== 3) return;
+                        clearBase();
+                        // Re-clicking Personalizowana removes its selection and falls back to Standardowa.
+                        if (item.id === "personalized") setBase("standard");
+                      }}
                     />
                   );
                 })}
@@ -809,10 +821,10 @@ function OfferPage() {
                         value={graverText}
                         onChange={(e) => { setGraverText(e.target.value); setGraverCommitted(false); }}
                         onKeyDown={(e) => {
-                          if (e.key === "Enter" && graverText.trim()) setGraverCommitted(true);
-                          else if (e.key === "Escape") { setGraverText(""); setGraverCommitted(false); }
+                          if (e.key === "Enter" && graverText.trim()) { cancelGraverReset(); setGraverCommitted(true); }
+                          else if (e.key === "Escape") { cancelGraverReset(); setGraverText(""); setGraverCommitted(false); setBase("standard"); }
                         }}
-                        onBlur={() => { if (!graverCommitted) setGraverText(""); }}
+                        onBlur={() => { if (!graverCommitted) scheduleGraverReset(); }}
                         placeholder="Wpisz grawer, np. Na urodziny"
                         className="h-9 min-w-0 flex-1 rounded-md border border-input bg-card px-3 text-xs outline-none focus-visible:ring-2 focus-visible:ring-ring"
                       />
